@@ -59,7 +59,6 @@ CMakeLists.txt.user*
 *.ncb
 *.sdf
 *.opensdf
-*.vcxproj
 *vcxproj.*
 
 # MinGW generated files
@@ -73,3 +72,7 @@ CMakeLists.txt.user*
 # --------
 *.dll
 *.exe
+.vs/
+debug/
+boost_1_92_0/
+release/

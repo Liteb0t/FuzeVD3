@@ -24,7 +24,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 #ifdef _WIN32
-    const Qstring invoke_ytdlp = "yt-dlp.exe";
+    const QString invoke_ytdlp = "yt-dlp.exe";
 #else
     const QString invoke_ytdlp = "python3 yt-dlp";
 #endif

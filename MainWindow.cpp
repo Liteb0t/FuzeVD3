@@ -5,7 +5,7 @@
 #include <QFileDialog>
 #include <QThread>
 #include <QScrollBar>
-
+#include <QIcon>
 
 // ------ GLOBAL ------
 
@@ -32,8 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->embed_metadata_checkbox->setCheckState(
         this->settings.value("embed_metadata").toBool() ? Qt::CheckState::Checked : Qt::CheckState::Unchecked);
     ui->save_location_input->setText(this->settings.value("save_location").toString());
-
-    controller->addPattern(printProgress, "[progress]", std::string(""), (int)0, std::string(""));
+    controller->addPattern(printProgress, "[progress]", std::string(""), (int)0, std::string("")); 
 }
 
 MainWindow::~MainWindow() {
@@ -79,7 +78,7 @@ void MainWindow::on_download_button_clicked() {
         this->invoke_ytdlp +
         " --progress-delta 0.73"
         // " --progress-template [progress] %(info.id)s_%(progress._percent)s_%(progress._speed_str)s_%(progress.eta)s";
-        " --progress-template [progress]+%(info.id)s+%(progress._percent)s+%(progress._speed_str)s";
+        " --progress-template [progress]+%(info.id)s+%(progress._percent)s+%(progress._speed_str)s -o \"%(title).60s [%(id)s].%(ext)s\" ";
 
     // Determine format
     Format format = this->formats.at(ui->format_combobox->currentText());

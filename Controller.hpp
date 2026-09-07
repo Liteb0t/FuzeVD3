@@ -133,11 +133,11 @@ public:
             try {
                 value = std::stoi(section); // TODO store value in view args tuple
             }
-            catch (std::invalid_argument const& ex) {
+            catch (std::invalid_argument const&) {
                 std::cout << ", invalid integer!";
                 return false;
             }
-            catch (std::out_of_range const& ex) {
+            catch (std::out_of_range const&) {
                 std::cout << ", integer out of range!";
                 return false;
             }
@@ -206,10 +206,16 @@ public:
         size_t i;
         for (i = 0; std::getline(location, section, '+'); i++) {
             // for (std::list<std::forward_list<std::variant<std::string, int>>::const_iterator>::const_iterator view = matched_views.begin(); view != matched_views.end(); view++) {
-            for (int view_id : matched_views) {
-                bool is_match = views.at(view_id)->attemptPathMatch(section, i);
+            for (auto it = matched_views.begin(); it != matched_views.end(); ) {
+                bool is_match = views.at(*it)->attemptPathMatch(section, i);
+
                 if (!is_match) {
-                    matched_views.erase(view_id);
+                    // erase() removes the item AND returns a safe iterator to the next item
+                    it = matched_views.erase(it);
+                }
+                else {
+                    // Only manually move forward if we didn't erase anything
+                    ++it;
                 }
             }
             std::cout << '.' << std::endl;
@@ -217,10 +223,17 @@ public:
                 break;
         }
         // Remove matches for URLs shorter than the pattern
-        for (int view_id : matched_views) {
+        for (auto it = matched_views.begin(); it != matched_views.end(); ) {
+            int view_id = *it;
             if (views.at(view_id)->getPathSize() > i) {
                 std::cout << "View " << view_id << " path size " << views.at(view_id)->getPathSize() << " is longer than " << i << ". Removing." << std::endl;
-                matched_views.erase(view_id);
+
+                // erase() removes the item and safely updates 'it' to point to the next item
+                it = matched_views.erase(it);
+            }
+            else {
+                // Only move forward if we didn't delete anything
+                ++it;
             }
         }
         if (matched_views.size() >= 1) {
